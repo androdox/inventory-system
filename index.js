@@ -1,4 +1,6 @@
 require('dotenv').config();
+const swaggerUI = require ('swagger-ui-express');
+const specs = require('./swagger/swagger.js')
 const passport = require('./auth/passport');
 const express = require('express');
 const cors = require('cors');
@@ -8,6 +10,7 @@ const { productController } = require('./modules/product');
 const app = express();
 const port = 3000;
 
+app.use('/documentation', swaggerUI.serve, swaggerUI.setup(specs))
 app.use(express.json());
 
 // Configuración de CORS
