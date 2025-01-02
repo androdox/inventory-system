@@ -1,10 +1,10 @@
 require('dotenv').config();
-const swaggerUI = require ('swagger-ui-express');
+const swaggerUI = require('swagger-ui-express');
 const specs = require('./swagger/swagger.js')
 const passport = require('./auth/passport');
 const express = require('express');
 const cors = require('cors');
-const jwt = require('jsonwebtoken');
+const axios = require('axios')
 const { productController } = require('./modules/product');
 
 const app = express();
@@ -29,17 +29,35 @@ app.use(cors({
 // Inicializar Passport
 app.use(passport.initialize());
 
+async function validateToken(accessToken) {
+  try {
+    const response = await axios.get(
+      `https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${accessToken}`
+    );
+
+    // Token válido: devuelve la información del token
+    return response.data;
+  } catch (error) {
+    // Token inválido o expirado
+    console.error('El token no es válido o ha expirado', error.response.data);
+    return null;
+  }
+}
+
 // Middleware para validar el token
-const authenticateToken = (req, res, next) => {
-  const token = req.query.token || req.headers.authorization?.split(' ')[1];
+const validateTokenMiddleware = async (req, res, next) => {
+  const accessToken = req.headers.authorization?.split(' ')[1];
 
-  if (!token) return res.status(401).send('Token no proporcionado');
+  if (!accessToken) {
+    return res.status(401).json({ error: 'No se proporcionó el token' });
+  }
 
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    if (err) return res.status(403).send('Token inválido o expirado');
-    req.user = user;
-    next();
-  });
+  const isValid = await validateToken(accessToken);
+  if (!isValid) {
+    return res.status(401).json({ error: 'El token ha expirado o no es válido' });
+  }
+
+  next();
 };
 
 // Ruta para iniciar la autenticación con Google
@@ -54,19 +72,13 @@ app.get('/auth/google/callback', (req, res) => {
       return res.status(401).send('Error en la autenticación');
     }
 
-    const token = jwt.sign(
-      { id: user.id, name: user.name, email: user.email },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
-    );
-
-    const redirectUrl = `http://localhost:3001/?token=${token}`;
+    const redirectUrl = `http://localhost:3001/?token=${user.accessToken}`;
     return res.redirect(redirectUrl);
   })(req, res);
 });
 
 // Ruta protegida de productos
-app.get('/products', authenticateToken, async (req, res) => {
+app.get('/products', validateTokenMiddleware, async (req, res) => {
   try {
     const products = await productController.getProducts(req, res);
   } catch (error) {
@@ -74,7 +86,7 @@ app.get('/products', authenticateToken, async (req, res) => {
   }
 });
 
-app.post('/products', authenticateToken, async (req, res) => {
+app.post('/products', validateTokenMiddleware, async (req, res) => {
   try {
     const products = await productController.createProduct(req, res);
   } catch (error) {
@@ -82,7 +94,7 @@ app.post('/products', authenticateToken, async (req, res) => {
   }
 });
 
-app.put('/products/:id', authenticateToken, async (req, res) => {
+app.put('/products/:id', validateTokenMiddleware, async (req, res) => {
   try {
     const products = await productController.updateProduct(req, res);
   } catch (error) {
@@ -90,7 +102,7 @@ app.put('/products/:id', authenticateToken, async (req, res) => {
   }
 });
 
-app.delete('/products/:id', authenticateToken, async (req, res) => {
+app.delete('/products/:id', validateTokenMiddleware, async (req, res) => {
   try {
     const products = await productController.deleteProduct(req, res);
   } catch (error) {

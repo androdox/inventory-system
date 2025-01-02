@@ -10,8 +10,13 @@ passport.use('google',
             callbackURL: process.env.GOOGLE_CALLBACK_URL,
         },
         (accessToken, refreshToken, profile, done) => {
-
-            return done(null, profile); // El perfil del usuario se pasa a done
+            // Guarda los tokens y el perfil del usuario
+            const user = {
+                profile: profile,
+                accessToken: accessToken,
+                refreshToken: refreshToken, // Disponible si el scope incluye 'offline_access'
+            };
+            return done(null, user); // El perfil del usuario se pasa a done
         }
     )
 );
