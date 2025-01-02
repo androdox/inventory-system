@@ -22,8 +22,8 @@ The Inventory System API is a robust backend service designed for managing produ
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-repo/inventory-system-api.git
-   cd inventory-system-api
+   git clone https://github.com/androdox/inventory-system.git
+   cd inventory-system
    ```
 
 2. Install dependencies:
@@ -89,12 +89,12 @@ The Inventory System API is a robust backend service designed for managing produ
 - **cors:** ^2.8.5
 - **dotenv:** ^16.4.7
 - **express:** ^4.21.2
-- **jsonwebtoken:** ^9.0.2
 - **passport:** ^0.7.0
 - **passport-google-oauth20:** ^2.0.0
 - **pg:** ^8.13.1
 - **swagger-jsdoc:** ^6.2.8
 - **swagger-ui-express:** ^5.0.1
+- **axios:** "^1.7.9"
 
 ### Development
 
@@ -108,7 +108,7 @@ The Inventory System API is a robust backend service designed for managing produ
   Initiates Google OAuth login.
 
 - **GET /auth/google/callback**
-  Callback URL for Google OAuth. Returns a JWT token on successful authentication.
+  Callback URL for Google OAuth. Returns a token on successful authentication.
 
 ### Products
 
