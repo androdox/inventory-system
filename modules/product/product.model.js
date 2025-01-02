@@ -8,11 +8,11 @@ async function createProduct({ name, description, price, quantity }) {
 }
 
 async function getAllProducts() {
-  return await db.query('SELECT * FROM products');
+  return await db.query('SELECT id, name, description, price, quantity FROM products');
 }
 
 async function getProductById(id) {
-  return await db.query('SELECT * FROM products WHERE id = $1', [id]);
+  return await db.query('SELECT id, name, description, price, quantity FROM products WHERE id = $1', [id]);
 }
 
 async function updateProduct(id, { name, description, price, quantity }) {
