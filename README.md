@@ -55,6 +55,17 @@ The Inventory System API is a robust backend service designed for managing produ
      price DECIMAL(10, 2) NOT NULL,
      quantity INT NOT NULL
    );
+   
+    INSERT INTO public.products (id, name, description, price, quantity) VALUES (2, 'Smartphone', 'Samsung Galaxy S23', 799.98, 19);
+    INSERT INTO public.products (id, name, description, price, quantity) VALUES (1, 'Laptop', 'Laptop Dell con 16GB de RAM', 1200.98, 10);
+    INSERT INTO public.products (id, name, description, price, quantity) VALUES (3, 'Smartwatch', 'Apple Watch Series 8', 399.99, 25);
+    INSERT INTO public.products (id, name, description, price, quantity) VALUES (4, 'Headphones', 'Sony WH-1000XM5', 349.99, 30);
+    INSERT INTO public.products (id, name, description, price, quantity) VALUES (5, 'Tablet', 'iPad Air 2023', 599.99, 15);
+    INSERT INTO public.products (id, name, description, price, quantity) VALUES (6, 'Wireless Earbuds', 'Samsung Galaxy Buds Pro', 199.99, 50);
+    INSERT INTO public.products (id, name, description, price, quantity) VALUES (7, 'Monitor', 'LG UltraWide 34"', 499.99, 12);
+    INSERT INTO public.products (id, name, description, price, quantity) VALUES (8, 'Keyboard', 'Logitech G915 TKL', 179.99, 40);
+    INSERT INTO public.products (id, name, description, price, quantity) VALUES (9, 'Mouse', 'Razer DeathAdder V2', 69.99, 60);
+    INSERT INTO public.products (id, name, description, price, quantity) VALUES (10, 'External Hard Drive', 'Seagate 2TB', 89.99, 22);
    ```
 
 ### Running the Application
